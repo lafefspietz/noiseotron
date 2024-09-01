@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <!--
+
+Noiseotron
+
+    -->
+
+
+
+    <!--Stop Google:-->
+    <META NAME="robots" CONTENT="noindex,nofollow">
+
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.js"></script>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script>
+            MathJax.Hub.Config({
+                tex2jax: {
+                inlineMath: [['$','$'], ['\\(','\\)']],
+                processEscapes: true,
+                processClass: "mathjax",
+                ignoreClass: "no-mathjax"
+                }
+            });//			MathJax.Hub.Typeset();//tell Mathjax to update the math
+        </script>
+</head>
+<body>    
+<div id = "title">NOISEOTRON</div>
+
+<img id = "schematic" src = "images/schematic.svg"/>
+
+<table id = "commandtable">
+    <tr>
+        <Td>COMMAND:</Td>
+        <TD><INPUT id = "command"/></TD>
+        <td><a href = "readme.html">README</a></td>
+    </tr>
+</table>
+
+<script>
+
+</script>
+<style>
+body{
+    overflow:hidden;
+    background-color:white;
+    font-family:Arial;
+}
+#title{
+    width:10em;
+    text-align:center;
+    position:absolute;
+    left:1px;
+    top:1px;
+    font-size:1.5em;
+}
+#schematic{
+    position:absolute;
+    left:0px;
+    top:0px;
+    height:100%;
+    z-index:-1;
+}
+a{
+    color:blue;
+}
+#commandtable{
+    position:absolute;
+    right:0px;
+    bottom:0px;
+    font-size:2em;
+}
+#command{
+    font-size:1em;
+}
+@media only screen and (orientation: landscape) {
+    #scrollscroll{
+        top:0px;
+        right:100px;
+    }
+}
+
+@media only screen and (orientation: portrait) {
+    #scrollscroll{
+        top:100px;
+        right:0px;
+    }
+}
+</style>
+</body>
+</html>
