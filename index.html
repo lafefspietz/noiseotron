@@ -33,6 +33,7 @@ Noiseotron
 <div id = "title">NOISEOTRON</div>
 
 <img id = "schematic" src = "images/schematic.svg"/>
+<img id = "triangle" src= "images/DAC-triangle.svg"/>
 
 <table id = "commandtable">
     <tr>
@@ -43,6 +44,9 @@ Noiseotron
 </table>
 
 <script>
+
+document.getElementById("command").value = "";
+document.getElementById("command").select();
 
 </script>
 <style>
@@ -65,6 +69,10 @@ body{
     top:0px;
     height:100%;
     z-index:-1;
+}
+#triangle{
+    position:absolute;
+    left:320px;
 }
 a{
     color:blue;
