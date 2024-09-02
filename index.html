@@ -139,6 +139,16 @@ document.getElementById("commandinput").onchange = function(){
     if(command.includes("=")){
         variable = command.split("=")[0];
         number = parseFloat(command.split("=")[1]);
+        if(variable == "frf" || variable == "frf " || variable == "Frf " || variable == "Frf " || variable == "f " || variable == "f"){
+            frf = number;
+            document.getElementById("frfspan").innerHTML = (frf.toPrecision(3)).toString();
+            saverfjson();
+        } 
+        if(variable == "prf" || variable == "prf " || variable == "Prf " || variable == "Prf " || variable == "p " || variable == "p"){
+            prf = number;
+            document.getElementById("prfspan").innerHTML = (prf.toPrecision(2)).toString();
+            saverfjson();
+        } 
         if(variable == "red" || variable == "red "){
             if(number > redknob){
                 frf = frf + deltafrf;
