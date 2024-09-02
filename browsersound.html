@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <!--
+
+Noiseotron
+
+    -->
+
+
+
+    <!--Stop Google:-->
+    <META NAME="robots" CONTENT="noindex,nofollow">
+
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script>
+            MathJax.Hub.Config({
+                tex2jax: {
+                inlineMath: [['$','$'], ['\\(','\\)']],
+                processEscapes: true,
+                processClass: "mathjax",
+                ignoreClass: "no-mathjax"
+                }
+            });//			MathJax.Hub.Typeset();//tell Mathjax to update the math
+        </script>
+</head>
+<body>    
+<div id = "title">NOISEOTRON</div>
+
+<img id = "schematic" src = "images/schematic.svg"/>
+<img id = "triangle" src= "images/DAC-triangle-green.svg"/>
+<img id = "sine" src= "images/sine-blue.png"/>
+<img id = "noise" src= "images/noise-red.png"/>
+
+<div id = "frfbox">$f_{RF}$ = <span id  = "frf"></span> GHz</div>
+<div id = "prfbox">$P_{RF}$ = <span id  = "prf"></span> dBm</div>
+    
+<table id = "triangletable">
+    <tr>
+        <td>V = </td>
+    </tr>
+    <tr>
+        <td>A = </td>
+    </tr>
+    <tr>
+        <td>T = </td>
+    </tr>
+</table>
+
+<table id = "sinetable">
+    <tr>
+        <td>S = <span id ="S"></span></td>
+    </tr>
+    <tr>
+        <td>$f_{sine}$ = <span id = "fsine"></span> Hz</td>
+    </tr>
+</table>
+<table id = "noisetable">
+    <tr>
+        <td>N = <span id ="N"></span></td>
+    </tr>
+</table>
+
+<table id = "f1f2table">
+    <tr>
+        <td style = "color:red">$f_1$ = <span id ="f1"></span> Hz</td>
+        <td>   </td>
+        <td style = "color:blue">$f_2$ = <span id = "f2"></span> Hz</td>
+    </tr>
+</table>
+
+<table id = "commandtable">
+    <tr>
+        <Td>COMMAND:</Td>
+        <TD><INPUT id = "command"/></TD>
+        <td><a href = "readme.html">README</a></td>
+    </tr>
+</table>
+
+<script>
+
+
+document.getElementById("commandinput").value = "";
+document.getElementById("commandinput").select();
+noiseon = false;
+ 
+frameIndex= 0;
+p = 0;
+plast = 0;
+gain = 1;
+inLine = false;
+
+
+
+
+frf = 1.0;//RF frequency in GHz, which saves to JSON feteched by python
+prf = 1.0;//normalized RF power out
+
+
+
+
+
+
+
+function setup() {
+    p = 0;
+    plast = 0;
+    gain = 1;
+    inLine = false;
+    N = 1.0;
+    S = 1.0;
+    f = 1000;
+  createCanvas(400,400);
+  fill(0);
+ // fill(255, 40, 255);
+
+frameIndex= 0;
+  noise = new p5.Noise();
+
+//  noise.disconnect(); // Disconnect soundfile from master output...
+  //filter.process(noise); // ...and connect to filter so we'll only hear BandPass.
+//  noise.start();
+
+  osc2 = new p5.SinOsc(); // set frequency and type
+  osc2.freq(1000); 
+  
+  
+  mic = new p5.AudioIn();
+  mic.start();
+  fft = new p5.FFT();
+  fft.setInput(mic);
+
+//    noise.start();
+    noiseon = true;
+   // osc2.start();
+
+}
+
+
+
+function draw() {
+ // background(30);
+//  background(159,135,103);
+  frameRate(25);
+
+  // Map mouseX to a bandpass freq from the FFT spectrum range: 10Hz - 22050Hz
+  // Draw every value in the FFT spectrum analysis where
+  // x = lowest (10Hz) to highest (22050Hz) frequencies,
+  // h = energy / amplitude at that frequency
+  
+//  N = map(mouseY, 0, height, 1, 0);
+ // S = map(mouseX, 0, height, 0, 1);
+ // noise.amp(N);//noise power
+ // osc2.amp(S);//signal power
+   
+  spectrum = fft.analyze();
+  
+  nyquistFreq = sampleRate() / 2;
+  binFreq = nyquistFreq / (spectrum.length);
+
+  for (let i = 0; i < spectrum.length; i++) {
+    //stroke(spectrum[i]);
+    
+        n = 256;
+        H = spectrum[i]*360/n;
+        z = 255*(1 - Math.abs((H/60)%2 - 1));
+    
+        if(H < 60){
+            red = 255;
+            green = Math.round(z);
+            blue = 0;
+        }
+        if(H >= 60 && H < 120){
+            red = Math.round(z);
+            green = 255;
+            blue = 0;
+        }
+        if(H >= 120 && H < 180){
+            red = 0;
+            green = 255;
+            blue = Math.round(z);
+        }
+        if(H >= 180 && H < 240){
+            red = 0;    
+            green = Math.round(z);
+            blue = 255;
+        }
+        if(H >= 240 && H < 300){
+            red = Math.round(z);    
+            green = 0;
+            blue = 255;
+        }
+        if(H >= 300 && H < 360){
+            red = 255;    
+            green = 0;
+            blue = Math.round(z);
+        }    
+    
+  //  stroke(0);
+//    point(frameIndex,height - 5*i);
+    
+//     stroke('rgb(' + red + ',' + green + ',' + blue + ')');
+   
+        if(spectrum[i]< 4){
+            stroke("#808080");        
+        }
+        else{
+            stroke('rgba(' + red + ',' + green + ',' + blue + ',' + spectrum[i]/10 + ')');        
+        }
+      strokeWeight(3); 
+//        point(frameIndex,height - 3*i);
+      point(3*i,frameIndex);
+      
+  }
+
+  p = 0;
+  for(var index = 0;index < spectrum.length;index++){
+      p += spectrum[index];
+  }
+  p /= spectrum.length;
+  p *= gain*p;
+  stroke(0);
+  
+//  circle(frameIndex,map(power, 0, 255, height, 0),10);
+  strokeWeight(3); 
+
+//  line(frameIndex - 1,map(plast, 0, 255, height, 0),frameIndex,map(p, 0, 255, height, 0));
+  
+  plast = p;
+  
+  strokeWeight(1); 
+  textSize(25);
+  fill("purple");
+  color("purple");
+
+
+//  text("1 tic = 1 kHz",width - 200,height - 30);  
+
+ // text("time = " + (Math.round(width/kHz)).toString() + " ms",width - 200,height-30);  
+  strokeWeight(10); 
+ 
+  strokeWeight(1); 
+  fill(0);  
+  kHz = Math.round(1000/binFreq); 
+  for(var index = 1;index < width;index++){
+      if(index%(kHz) == 0){
+          //line(width,height - 3*index,0,height - 3*index);
+          
+          line(3*index,height,3*index,0);
+          
+          text((index/kHz).toString() + " kHz",3*index-70,30);
+      }
+  }
+  
+  
+   
+
+  
+  
+   frameIndex++;
+   if(frameIndex > width){
+       frameIndex = 0;
+       //background(255);
+   }
+    stroke(0);
+   
+}
+
+document.body.onclick = function(){
+    if(noiseon == false){
+        noise.start();
+        noiseon = true;
+        osc2.start();
+    }
+    else{
+        noise.stop();
+        noiseon = false;
+        osc2.stop();        
+    }
+}
+
+
+document.getElementById("commandinput").onchange = function(){
+    command = this.value;
+    if(command.includes("=")){
+        variable = command.split("=")[0];
+        number = parseFloat(command.split("=")[1]);
+       
+        if(variable == "f" || variable == "F" || variable == "f " || variable == "F "){
+            f = number;
+            osc2.freq(number);
+        }
+        
+        if(variable == "s" || variable == "S" || variable == "s " || variable == "S "){
+            S = number;
+            osc2.amp(S);//signal power
+        }
+
+        if(variable == "n" || variable == "N" || variable == "n " || variable == "N "){
+            N = number;
+            noise.amp(N);//noise power
+        }
+    }
+    this.value = "";
+}
+
+</script>
+<style>
+main canvas{
+    position:absolute;
+    right:0px;
+    top:50px;
+}
+body{
+    overflow:hidden;
+    background-color:white;
+    font-family:Arial;
+}
+#title{
+    width:10em;
+    text-align:center;
+    position:absolute;
+    left:1px;
+    top:1px;
+    font-size:1.5em;
+}
+#schematic{
+    position:absolute;
+    left:0px;
+    top:0px;
+    height:100%;
+    z-index:-1;
+}
+#triangle{
+    position:absolute;
+    left:480px;
+    top:0px;
+    height:30%;
+}
+#sine{
+    position:absolute;
+    left:480px;
+    top:30%;
+    width:200px;
+    height:20%;
+}
+#noise{
+    position:absolute;
+    left:480px;
+    top:60%;
+    width:200px;
+    height:20%;
+}
+#frfbox{
+    position:absolute;
+    left:100px;
+    top:3em;
+}
+#prfbox{
+    position:absolute;
+    left:300px;
+    top:3em;
+}
+#triangletable{
+    position:absolute;
+    top:20px;
+    left:680px;
+    color:green;
+    font-size:1.5em;
+}
+#sinetable{
+    position:absolute;
+    top:200px;
+    left:680px;
+    color:blue;
+    font-size:1.5em;
+}
+#noisetable{
+    position:absolute;
+    top:400px;
+    left:680px;
+    color:red;
+    font-size:1.5em;
+}
+#f1f2table{
+    position:absolute;
+    top:10px;
+    right:100px;
+    font-size:1.5em;
+}
+a{
+    color:blue;
+}
+#commandtable{
+    position:absolute;
+    right:0px;
+    bottom:0px;
+    font-size:2em;
+}
+#command{
+    font-size:1em;
+}
+@media only screen and (orientation: landscape) {
+    #scrollscroll{
+        top:0px;
+        right:100px;
+    }
+}
+
+@media only screen and (orientation: portrait) {
+    #scrollscroll{
+        top:100px;
+        right:0px;
+    }
+}
+</style>
+</body>
+</html>
