@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <!--
+
+Noiseotron Radio Source Control
+
+    -->
+
+
+
+    <!--Stop Google:-->
+    <META NAME="robots" CONTENT="noindex,nofollow">
+
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.js"></script>
+
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script>
+            MathJax.Hub.Config({
+                tex2jax: {
+                inlineMath: [['$','$'], ['\\(','\\)']],
+                processEscapes: true,
+                processClass: "mathjax",
+                ignoreClass: "no-mathjax"
+                }
+            });//			MathJax.Hub.Typeset();//tell Mathjax to update the math
+        </script>
+</head>
+<body>    
+<a href = "readme.html">README</a>
+<img id = "schematic" src = "images/schematic.svg"/>
+
+    
+<table id = "knobtable">
+    <tr>
+        <td>
+            <img src = "images/redknob.png"/>
+        </td>
+    </tr>
+    <tr>
+        <td style = "color:red">
+            $f_{RF}$ = <span id  = "frfspan"></span> GHz
+        </td>
+    </tr>
+    <tr>
+        <td>
+                <img src = "images/blueknob.png"/>
+        </td>
+    </tr>
+    <tr>
+        <td style = "color:blue">
+            $P_{RF}$ = <span id  = "prfspan"></span> dBm
+        </td>
+    </tr>
+</table>
+
+<textarea id = "jsonbox"></textarea>
+
+<div id = "jsontitle"><img src = "images/json.png"/><br>rfjson.txt</div>
+
+<img id = "joinarrow" src=  "images/joinarrow.png"/>
+
+<table id = "commandtable">
+    <tr>
+        <td style = "color:red;display:none">RED:<span id = "redspan"></span></td>
+        <td style = "color:blue;display:none">BLUE:<span id = "bluespan"></span></td>
+        <Td>COMMAND:</Td>
+        <TD><INPUT id = "commandinput"/></TD>
+
+        <td></td>
+    </tr>
+</table>
+
+<script>
+
+frf = 1.0;//frequency in GHz
+deltafrf = 0.05;//frequency change in GHz
+prf = -30.0;//power in dBm
+deltaprf = 1.0;
+
+redknob = 0;
+redknobmode = 0;
+redknobmodes = [
+    "frf",
+    "fsine",
+    "f1"
+];
+document.getElementById("redspan").innerHTML = redknob.toString();
+
+document.getElementById("frfspan").innerHTML = (frf.toPrecision(3)).toString();
+
+document.getElementById("prfspan").innerHTML = (prf.toPrecision(2)).toString();
+
+blueknob = 0;
+blueknobmode = 0;
+blueknobmodes = [
+    "frf",
+    "fsine",
+    "f1"
+];
+document.getElementById("bluespan").innerHTML = blueknob.toString();
+
+document.getElementById("commandinput").value = "";
+document.getElementById("commandinput").select();
+
+
+
+
+document.getElementById("commandinput").onchange = function(){
+    command = this.value;
+    if(command.includes("=")){
+        variable = command.split("=")[0];
+        number = parseFloat(command.split("=")[1]);
+        if(variable == "frf" || variable == "frf " || variable == "Frf " || variable == "Frf " || variable == "f " || variable == "f"){
+            frf = number;
+            document.getElementById("frfspan").innerHTML = (frf.toPrecision(3)).toString();
+            saverfjson();
+        } 
+        if(variable == "prf" || variable == "prf " || variable == "Prf " || variable == "Prf " || variable == "p " || variable == "p"){
+            prf = number;
+            document.getElementById("prfspan").innerHTML = (prf.toPrecision(2)).toString();
+            saverfjson();
+        } 
+        if(variable == "red" || variable == "red "){
+            if(number > redknob){
+                frf = frf + deltafrf;
+            }
+            if(number < redknob){
+                frf = frf - deltafrf;
+            }
+            frf = Math.round(frf*100)/100;
+            redknob = number;        
+            document.getElementById("redspan").innerHTML = redknob.toString();
+                document.getElementById("frfspan").innerHTML = (frf.toPrecision(3)).toString();
+            saverfjson();
+        }
+        if(variable == "blue" || variable == "blue "){
+            if(number > blueknob){
+                prf = prf + deltaprf;
+            }
+            if(number < blueknob){
+                prf = prf - deltaprf;
+            }
+            blueknob = number;        
+            document.getElementById("bluespan").innerHTML = blueknob.toString();
+            document.getElementById("prfspan").innerHTML = (prf.toPrecision(2)).toString();
+            saverfjson();
+        }
+    }
+    
+    this.value = "";
+}
+
+
+timestamp = Math.round((new Date().getTime())/1000).toString();
+
+rfjson = {
+    "frf":frf,
+    "prf":prf,
+    "timestamp":timestamp
+};
+
+function saverfjson(){
+    timestamp = Math.round((new Date().getTime())/1000).toString();
+    rfjson.frf = frf;
+    rfjson.prf = prf;
+    rfjson.timestamp = timestamp;
+    document.getElementById("jsonbox").value = JSON.stringify(rfjson,null,"    ");
+    var url = "filesaver.php";        
+    var httpc2 = new XMLHttpRequest();
+    httpc2.open("POST", url, true);
+    httpc2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    httpc2.send("data="+encodeURIComponent(JSON.stringify(rfjson,null,"    "))+"&filename=rfjson.txt");//send text to filesaver.php
+}
+</script>
+<style>
+main canvas{
+    position:absolute;
+    right:0px;
+    top:50px;
+}
+body{
+    overflow:hidden;
+    background-color:white;
+    font-family:Arial;
+}
+#joinarrow{
+    position:absolute;
+    right:250px;
+    top:140px;
+    width:120px;
+}
+#jsonbox{
+    position:absolute;
+    width:150px;
+    height:200px;
+    right:400px;
+    top:250px;
+    border-radius:5px;
+    font-size:14px;
+    font-family:courier;
+}
+#jsontitle{
+    position:absolute;
+    top:100px;
+    right:400px;
+    font-size:24px;
+    font-family:courier;
+}
+#jsontitle img{
+    max-width:150px;
+}
+#title{
+    width:10em;
+    text-align:center;
+    position:absolute;
+    left:1px;
+    top:1px;
+    font-size:1.5em;
+}
+#schematic{
+    position:absolute;
+    left:0px;
+    top:0px;
+    height:100%;
+    z-index:-1;
+}
+#knobtable{
+    position:absolute;
+    right:10px;
+    top:10px;
+    font-size:2em;
+}
+#knobtable img{
+    max-width:130px;
+}
+#knobtable td{
+    text-align:right;
+}
+a{
+    color:blue;
+}
+#commandtable{
+    position:absolute;
+    right:0px;
+    bottom:0px;
+    font-size:2em;
+}
+#command{
+    font-size:1em;
+}
+@media only screen and (orientation: landscape) {
+
+
+}
+
+@media only screen and (orientation: portrait) {
+
+    
+}
+</style>
+</body>
+</html>
