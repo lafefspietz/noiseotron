@@ -31,19 +31,12 @@ Noiseotron Radio Source Control
 </head>
 <body>    
 <a style = "font-size:2em" href = "readme.html">README</a>
-<img id = "schematic" src = "images/schematic.svg"/>
 
 <img style = "width:70px;position:absolute;right:300px;top:50px;z-index:1" id = "phplogo" src = "images/php-logo.png"/>
 <table id = "jsonflow">
     <tr>
-         <td>
-            <img style = "transform:rotate(180deg);width:50px" src= "images/shortarrow.png"/>
-        </td>
-        <td><img style = "width:70px" src = "images/soapy_sdr_logo.png"/><br><a href = "https://github.com/pothosware/SoapySDR/wiki">SoapySDR</a>
-        </td>
-        <td>
-            <img style = "transform:rotate(180deg);width:50px" src= "images/shortarrow.png"/>
-        </td>
+      
+ 
         <td>
             <img style = "width:120px" src = "images/python-logo.png"/></td>
         </td>
@@ -56,7 +49,7 @@ Noiseotron Radio Source Control
 <table id = "knobtable">
     <tr>
         <td style = "color:red">
-            $f_{RF}$ = <span id  = "frfspan"></span> GHz
+            $f_{sine}$ = <span id  = "fsinespan"></span> Hz
         </td>
     </tr>
 
@@ -67,7 +60,7 @@ Noiseotron Radio Source Control
     </tr>
     <tr>
         <td style = "color:blue">
-            $P_{RF}$ = <span id  = "prfspan"></span> dBm
+            $A_{sine}$ = <span id  = "asinespan"></span>
         </td>
     </tr>
 
@@ -80,7 +73,7 @@ Noiseotron Radio Source Control
 
 <textarea id = "jsonbox"></textarea>
 
-<div id = "jsontitle"><img src = "images/json.png"/><br>rfjson.txt</div>
+<div id = "jsontitle"><img src = "images/json.png"/><br>sinejson.txt</div>
 
 <img id = "joinarrow" src=  "images/joinarrow.png"/>
 
@@ -97,31 +90,21 @@ Noiseotron Radio Source Control
 
 <script>
 
-frf = 1.0;//frequency in GHz
-deltafrf = 0.05;//frequency change in GHz
-prf = -30.0;//power in dBm
-deltaprf = 1.0;
+fsine = 1000;//frequency in Hz
+deltafsine = 25;//frequency change in Hz
+asine = 1.0;//amplitude of sine wave in arbs
+deltaasine = 0.05;
 
 redknob = 0;
-redknobmode = 0;
-redknobmodes = [
-    "frf",
-    "fsine",
-    "f1"
-];
+
 document.getElementById("redspan").innerHTML = redknob.toString();
 
-document.getElementById("frfspan").innerHTML = (frf.toPrecision(3)).toString();
+document.getElementById("fsinespan").innerHTML = (fsine).toString();
 
-document.getElementById("prfspan").innerHTML = (prf.toPrecision(2)).toString();
+document.getElementById("asinespan").innerHTML = (asine.toPrecision(3)).toString();
 
 blueknob = 0;
-blueknobmode = 0;
-blueknobmodes = [
-    "frf",
-    "fsine",
-    "f1"
-];
+
 document.getElementById("bluespan").innerHTML = blueknob.toString();
 
 document.getElementById("commandinput").value = "";
@@ -135,40 +118,46 @@ document.getElementById("commandinput").onchange = function(){
     if(command.includes("=")){
         variable = command.split("=")[0];
         number = parseFloat(command.split("=")[1]);
-        if(variable == "frf" || variable == "frf " || variable == "Frf " || variable == "Frf " || variable == "f " || variable == "f"){
-            frf = number;
-            document.getElementById("frfspan").innerHTML = (frf.toPrecision(3)).toString();
-            saverfjson();
+        if(variable == "f " || variable == "f"){
+            fsine = number;
+            fsine = Math.round(fsine);
+
+            document.getElementById("fsinespan").innerHTML = (frf.toPrecision(0)).toString();
+            savejson();
         } 
-        if(variable == "prf" || variable == "prf " || variable == "Prf " || variable == "Prf " || variable == "p " || variable == "p"){
-            prf = number;
-            document.getElementById("prfspan").innerHTML = (prf.toPrecision(2)).toString();
-            saverfjson();
+        if(variable == "a" || variable == "a " ||  variable == "p " || variable == "p"){
+            asine = number;
+            asine = Math.round(fsine*100)/100;
+
+            document.getElementById("asinespan").innerHTML = (asine.toPrecision(2)).toString();
+            savejson();
         } 
         if(variable == "red" || variable == "red "){
             if(number > redknob){
-                frf = frf + deltafrf;
+                fsine = fsine + deltafsine;
             }
             if(number < redknob){
-                frf = frf - deltafrf;
+                fsine = fsine - deltafsine;
             }
-            frf = Math.round(frf*100)/100;
+            fsine = Math.round(fsine);
             redknob = number;        
             document.getElementById("redspan").innerHTML = redknob.toString();
-                document.getElementById("frfspan").innerHTML = (frf.toPrecision(3)).toString();
-            saverfjson();
+                document.getElementById("fsinespan").innerHTML = (fsine).toString();
+            savejson();
         }
         if(variable == "blue" || variable == "blue "){
             if(number > blueknob){
-                prf = prf + deltaprf;
+                asine = asine + deltaasine;
             }
             if(number < blueknob){
-                prf = prf - deltaprf;
+                asine = asine - deltaasine;
             }
+            asine = (Math.round(asine*100))/100;
+
             blueknob = number;        
             document.getElementById("bluespan").innerHTML = blueknob.toString();
-            document.getElementById("prfspan").innerHTML = (prf.toPrecision(2)).toString();
-            saverfjson();
+            document.getElementById("asinespan").innerHTML = (asine.toPrecision(3)).toString();
+            savejson();
         }
     }
     
@@ -178,23 +167,23 @@ document.getElementById("commandinput").onchange = function(){
 
 timestamp = Math.round((new Date().getTime())/1000).toString();
 
-rfjson = {
-    "frf":frf,
-    "prf":prf,
+sinejson = {
+    "fsine":fsine,
+    "asine":asine,
     "timestamp":timestamp
 };
 
-function saverfjson(){
+function savejson(){
     timestamp = Math.round((new Date().getTime())/1000).toString();
-    rfjson.frf = frf;
-    rfjson.prf = prf;
-    rfjson.timestamp = timestamp;
-    document.getElementById("jsonbox").value = JSON.stringify(rfjson,null,"    ");
+    sinejson.fsine = fsine;
+    sinejson.asine = asine;
+    sinejson.timestamp = timestamp;
+    document.getElementById("jsonbox").value = JSON.stringify(sinejson,null,"    ");
     var url = "filesaver.php";        
     var httpc2 = new XMLHttpRequest();
     httpc2.open("POST", url, true);
     httpc2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    httpc2.send("data="+encodeURIComponent(JSON.stringify(rfjson,null,"    "))+"&filename=rfjson.txt");//send text to filesaver.php
+    httpc2.send("data="+encodeURIComponent(JSON.stringify(sinejson,null,"    "))+"&filename=sinejson.txt");//send text to filesaver.php
 }
 </script>
 <style>
