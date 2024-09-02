@@ -146,9 +146,11 @@ document.getElementById("commandinput").onchange = function(){
             if(number < redknob){
                 frf = frf - deltafrf;
             }
+            frf = Math.round(frf*100)/100;
             redknob = number;        
             document.getElementById("redspan").innerHTML = redknob.toString();
                 document.getElementById("frfspan").innerHTML = (frf.toPrecision(3)).toString();
+            saverfjson();
         }
         if(variable == "blue" || variable == "blue "){
             if(number > blueknob){
@@ -159,13 +161,35 @@ document.getElementById("commandinput").onchange = function(){
             }
             blueknob = number;        
             document.getElementById("bluespan").innerHTML = blueknob.toString();
-                document.getElementById("prfspan").innerHTML = (prf.toPrecision(2)).toString();
+            document.getElementById("prfspan").innerHTML = (prf.toPrecision(2)).toString();
+            saverfjson();
         }
     }
     
     this.value = "";
 }
 
+
+timestamp = Math.round((new Date().getTime())/1000).toString();
+
+rfjson = {
+    "frf":frf,
+    "prf":prf,
+    "timestamp":timestamp
+};
+
+function saverfjson(){
+    timestamp = Math.round((new Date().getTime())/1000).toString();
+    rfjson.frf = frf;
+    rfjson.prf = prf;
+    rfjson.timestamp = timestamp;
+
+    var url = "filesaver.php";        
+    var httpc2 = new XMLHttpRequest();
+    httpc2.open("POST", url, true);
+    httpc2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    httpc2.send("data="+encodeURIComponent(JSON.stringify(rfjson,null,"    "))+"&filename=rfjson.txt");//send text to filesaver.php
+}
 </script>
 <style>
 main canvas{
@@ -215,13 +239,15 @@ body{
 }
 #frfbox{
     position:absolute;
-    left:70px;
-    top:3em;
+    left:10px;
+    top:40px;
+    font-size:26px;
 }
 #prfbox{
     position:absolute;
-    left:300px;
-    top:3em;
+    left:280px;
+    top:40px;
+    font-size:26px;
 }
 #triangletable{
     position:absolute;
