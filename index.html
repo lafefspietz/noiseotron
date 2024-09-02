@@ -33,7 +33,46 @@ Noiseotron
 <div id = "title">NOISEOTRON</div>
 
 <img id = "schematic" src = "images/schematic.svg"/>
-<img id = "triangle" src= "images/DAC-triangle.svg"/>
+<img id = "triangle" src= "images/DAC-triangle-green.svg"/>
+<img id = "sine" src= "images/sine-blue.png"/>
+<img id = "noise" src= "images/noise-red.png"/>
+
+<div id = "frfbox">$f_{RF}$ = <span id  = "frf"></span> GHz</div>
+<div id = "prfbox">$P_{RF}$ = <span id  = "prf"></span> dBm</div>
+    
+<table id = "triangletable">
+    <tr>
+        <td>V = </td>
+    </tr>
+    <tr>
+        <td>A = </td>
+    </tr>
+    <tr>
+        <td>T = </td>
+    </tr>
+</table>
+
+<table id = "sinetable">
+    <tr>
+        <td>S = <span id ="S"></span></td>
+    </tr>
+    <tr>
+        <td>$f_{sine}$ = <span id = "fsine"></span> Hz</td>
+    </tr>
+</table>
+<table id = "noisetable">
+    <tr>
+        <td>N = <span id ="N"></span></td>
+    </tr>
+</table>
+
+<table id = "f1f2table">
+    <tr>
+        <td style = "color:red">$f_1$ = <span id ="f1"></span> Hz</td>
+        <td>   </td>
+        <td style = "color:blue">$f_2$ = <span id = "f2"></span> Hz</td>
+    </tr>
+</table>
 
 <table id = "commandtable">
     <tr>
@@ -47,6 +86,11 @@ Noiseotron
 
 document.getElementById("command").value = "";
 document.getElementById("command").select();
+
+frf = 1.0;//RF frequency in GHz, which saves to JSON feteched by python
+prf = 1.0;//normalized RF power out
+
+
 
 </script>
 <style>
@@ -72,7 +116,60 @@ body{
 }
 #triangle{
     position:absolute;
-    left:320px;
+    left:480px;
+    top:0px;
+    height:30%;
+}
+#sine{
+    position:absolute;
+    left:480px;
+    top:30%;
+    width:200px;
+    height:20%;
+}
+#noise{
+    position:absolute;
+    left:480px;
+    top:60%;
+    width:200px;
+    height:20%;
+}
+#frfbox{
+    position:absolute;
+    left:100px;
+    top:3em;
+}
+#prfbox{
+    position:absolute;
+    left:300px;
+    top:3em;
+}
+#triangletable{
+    position:absolute;
+    top:20px;
+    left:680px;
+    color:green;
+    font-size:1.5em;
+}
+#sinetable{
+    position:absolute;
+    top:200px;
+    left:680px;
+    color:blue;
+    font-size:1.5em;
+}
+#noisetable{
+    position:absolute;
+    top:400px;
+    left:680px;
+    color:red;
+    font-size:1.5em;
+}
+#f1f2table{
+    position:absolute;
+    top:10px;
+    right:100px;
+    font-size:1.5em;
 }
 a{
     color:blue;
