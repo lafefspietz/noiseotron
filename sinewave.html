@@ -17,6 +17,9 @@ Noiseotron Radio Source Control
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.js"></script>
 
     
+<script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"></script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.js"></script>
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
         <script>
             MathJax.Hub.Config({
@@ -90,13 +93,35 @@ Noiseotron Radio Source Control
 
 <script>
 
+var osc;
+
 fsine = 1000;//frequency in Hz
 deltafsine = 25;//frequency change in Hz
-asine = 1.0;//amplitude of sine wave in arbs
+asine = 0.25;//amplitude of sine wave in arbs
 deltaasine = 0.05;
 
 redknob = 0;
 
+function setup(){
+      createCanvas(1, 1);    
+  osc = new p5.SinOsc(); // set frequency and type
+  osc.amp(asine);   
+  osc.freq(fsine);  
+   osc.start();
+   
+}
+
+function draw(){
+  osc.amp(asine);   
+  osc.freq(fsine);  
+    
+}
+
+function mouseClicked() {
+ 
+
+    
+}
 document.getElementById("redspan").innerHTML = redknob.toString();
 
 document.getElementById("fsinespan").innerHTML = (fsine).toString();
@@ -113,7 +138,13 @@ document.getElementById("commandinput").select();
 
 
 
+oscoff = true;
 document.getElementById("commandinput").onchange = function(){
+    if(oscoff){
+              osc.start();
+    }
+    oscoff = false;
+
     command = this.value;
     if(command.includes("=")){
         variable = command.split("=")[0];
