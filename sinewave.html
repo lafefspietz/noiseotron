@@ -140,12 +140,18 @@ document.getElementById("commandinput").select();
 
 oscoff = true;
 document.getElementById("commandinput").onchange = function(){
-    if(oscoff){
-              osc.start();
-    }
-    oscoff = false;
+
 
     command = this.value;
+    if(command == "redpress" || command == "bluepress"){
+        if(oscoff){
+            osc.start();
+        }
+        else{
+            osc.stop();
+        }        
+        oscoff = !oscoff;
+    }
     if(command.includes("=")){
         variable = command.split("=")[0];
         number = parseFloat(command.split("=")[1]);
@@ -158,7 +164,7 @@ document.getElementById("commandinput").onchange = function(){
         } 
         if(variable == "a" || variable == "a " ||  variable == "p " || variable == "p"){
             asine = number;
-            asine = Math.round(fsine*100)/100;
+            asine = Math.round(asine*100)/100;
 
             document.getElementById("asinespan").innerHTML = (asine.toPrecision(2)).toString();
             savejson();
