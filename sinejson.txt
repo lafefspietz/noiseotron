@@ -1,5 +1,5 @@
 {
-    "fsine": 150,
-    "asine": 1.3,
-    "timestamp": "1725332551"
+    "fsine": 2600,
+    "asine": 0.1,
+    "timestamp": "1725397084"
 }
