@@ -33,7 +33,7 @@ Noiseotron Radio Source Control
 <a style = "font-size:2em" href = "readme.html">README</a>
 <img id = "schematic" src = "images/schematic.svg"/>
 
-<img style = "width:70px;position:absolute;right:300px;top:50px;z-index:1" id = "phplogo" src = "images/php-logo.png"/>
+<img style = "display:none;width:70px;position:absolute;right:300px;top:50px;z-index:1" id = "phplogo" src = "images/php-logo.png"/>
 <table id = "jsonflow" style = "display:none">
     <tr>
          <td>
@@ -52,37 +52,22 @@ Noiseotron Radio Source Control
         </td>
     </tr>
 </table>
-    
-<table id = "knobtable">
-    <tr>
-        <td style = "color:red">
+
+
+<div class = "displaybox" style = "color:red" id = "redbox">
             $f_{RF}$ = <span id  = "frfspan"></span> GHz
-        </td>
-    </tr>
+</div>
+<div class = "displaybox" style = "color:blue" id = "bluebox">
+    $P_{RF}$ = <span id  = "prfspan"></span> dBm
+</div>
 
-    <tr>
-        <td>
-            <img src = "images/redknob.png"/>
-        </td>
-    </tr>
-    <tr>
-        <td style = "color:blue">
-            $P_{RF}$ = <span id  = "prfspan"></span> dBm
-        </td>
-    </tr>
 
-    <tr>
-        <td>
-                <img src = "images/blueknob.png"/>
-        </td>
-    </tr>
-</table>
 
-<textarea id = "jsonbox"></textarea>
+<textarea style = "display:none" id = "jsonbox"></textarea>
 
-<div id = "jsontitle"><img src = "images/json.png"/><br>rfjson.txt</div>
+<div style = "display:none" id = "jsontitle"><img src = "images/json.png"/><br>rfjson.txt</div>
 
-<img id = "joinarrow" src=  "images/joinarrow.png"/>
+<img style = "display:none" id = "joinarrow" src=  "images/joinarrow.png"/>
 
 <table id = "commandtable">
     <tr>
@@ -208,6 +193,17 @@ body{
     background-color:white;
     font-family:Arial;
 }
+.displaybox{
+    position:absolute;
+    right:10px;
+    font-size:3.5em;
+}
+#redbox{
+    top:50px;
+}
+#bluebox{
+    top:300px;
+}
 #joinarrow{
     position:absolute;
     right:250px;
@@ -253,7 +249,7 @@ body{
     position:absolute;
     right:10px;
     top:10px;
-    font-size:2em;
+    font-size:4em;
 }
 #knobtable img{
     max-width:130px;
