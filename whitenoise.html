@@ -133,7 +133,7 @@ oscoff = true;
 document.getElementById("commandinput").onchange = function(){
 
     command = this.value;
-    if(command == "redpress"){
+    if(command == "redpress" || command == "bluepress" || command == "start" || command == "stop"){
         if(oscoff){
             noise.start();
         }
@@ -141,6 +141,7 @@ document.getElementById("commandinput").onchange = function(){
             noise.stop();
         }        
         oscoff = !oscoff;
+        savejson();
     }
 
     if(command.includes("=")){

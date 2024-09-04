@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <!--
+
+github.com/lafelabs/OSHI/README.md
+
+    -->
+
+<link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//wAA4AcAAO/3AADH9wAA7/cAAO/3AADEdwAA7/cAAOw3AADH9wAA7HcAAO/3AADEFwAA7/cAAOAHAAD//wAA" rel="icon" type="image/x-icon">
+
+    <!--Stop Google:-->
+    <META NAME="robots" CONTENT="noindex,nofollow">
+
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.js"></script>
+   <script src = "trashmagic.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script>
+            MathJax.Hub.Config({
+                tex2jax: {
+                inlineMath: [['$','$'], ['\\(','\\)']],
+                processEscapes: true,
+                processClass: "mathjax",
+                ignoreClass: "no-mathjax"
+                }
+            });//			MathJax.Hub.Typeset();//tell Mathjax to update the math
+        </script>
+
+
+    
+</head>
+<body>    
+<a href ="index.html">HOME</a>
+<h1 id = "title">QUANTUM NOISE</h1>
+<div class = "constant" id = "k">$k_B = 0.01 \frac{fW}{GHz \cdot mK}$</div>
+<div class = "constant" id = "h">$h = 0.7 \frac{fW}{GHz^2}$</div>
+<div class = "constant" id = "e">$e = 160 \frac{fW}{GHz \cdot mV}$</div>
+
+<script>
+
+
+rainbowstring(document.getElementById("title"));
+
+let G = 100;// gain in px per kelvin
+let T = 0.2;//temperature in kelvin
+let f = 0.25;// frequency in kelvin (hf/k_B)
+let margin = 10;//margin in px
+let vmax = 2.0;
+let x_ellipse = 0;
+let y_ellipse = 0;
+let v_ellipse = 0;
+let size_ellipse = 25;
+let omega = 2*3.14*0.5;// 2 PI frequency of animation motion
+let time = 0;
+let framespersecond = 30;
+
+
+
+if(innerWidth > innerHeight){
+    squaresize = innerHeight - 200;
+}
+else{
+    squaresize = innerWidth - 200;
+    
+}
+
+
+function setup() {
+
+  createCanvas(squaresize, squaresize);    
+  document.getElementsByTagName("main")[0].style.left = (0.5*(innerWidth - squaresize)).toString() + "px";
+  strokeWeight(4);  
+  background("#ffffff");
+  T = 0.04;
+  f = 1;
+//  background(220);
+  background("#ffffff");
+
+  translate(width/2, 0.5*(height - margin));
+  translate(0, 0.5*(squaresize - height));
+
+  noFill();
+  // plot hyperbolic tangent functions
+  strokeWeight(16);
+
+
+    blueindex = 0;
+    for(f = 0.01;f < 1.6;f += 1/4){
+          beginShape();
+          stroke(0,0,blueindex*23);
+          blueindex++;
+          for (let v = -vmax; v <= vmax; v += 0.01)  {
+              let p = -(0.5*T*(v+f)/(2*T))/Math.tanh((v+f)/(2*T)) -(0.5*T*(v-f)/(2*T))/Math.tanh((v-f)/(2*T));
+              p = p*1.732;
+              vertex(v * G, 2*p * G + 200);
+          }
+          endShape();        
+    }
+
+
+
+}
+
+
+
+function draw(){
+
+
+
+}
+
+
+
+
+</script>
+<style>
+body{
+    font-family:Comic Sans MS;
+}
+a{
+    color:blue;
+    font-family:arial;
+    font-size:1.5em;
+    position:absolute;
+    left:5px;
+    top:5px;
+    z-index:2;
+}
+h1{
+    font-family: Impact,Haettenschweiler,Franklin Gothic Bold,Charcoal,Helvetica Inserat,Bitstream Vera Sans Bold,Arial Black,sans serif; 
+
+  font-family: Helvetica, "Trebuchet MS", Verdana, sans-serif;
+    width:100%;
+    text-align:center;
+    font-size:95px;
+    position:absolute;
+    top:-50px;
+}
+main{
+    position:absolute;
+    left:100px;
+    top:100px;
+    z-index:-1;
+}
+main canvas{
+/*    border:solid;*/
+}
+.constant{
+    font-size:34px;
+    position:absolute;
+}
+#k{
+    width:100%;
+    text-align:center;
+    top:130px;
+    color:#0000ff;
+}
+#h{
+    width:100%;
+    color:green;
+    top:75%;
+    text-align:left;
+    margin-left:25%;
+}
+#e{
+    width:80%;
+    color:red;
+    top:75%;
+    text-align:right;
+    padding-right:15%;
+}
+@media only screen and (orientation: landscape) {
+    #scrollscroll{
+        top:0px;
+        right:100px;
+    }
+}
+
+@media only screen and (orientation: portrait) {
+    #scrollscroll{
+        top:100px;
+        right:0px;
+    }
+}
+</style>
+</body>
+</html>

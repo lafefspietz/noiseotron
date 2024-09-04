@@ -143,7 +143,7 @@ document.getElementById("commandinput").onchange = function(){
 
 
     command = this.value;
-    if(command == "redpress" || command == "bluepress"){
+    if(command == "redpress" || command == "bluepress" || command == "start" || command == "stop"){
         if(oscoff){
             osc.start();
         }
@@ -159,7 +159,7 @@ document.getElementById("commandinput").onchange = function(){
             fsine = number;
             fsine = Math.round(fsine);
 
-            document.getElementById("fsinespan").innerHTML = (frf.toPrecision(0)).toString();
+            document.getElementById("fsinespan").innerHTML = (fsine).toString();
             savejson();
         } 
         if(variable == "a" || variable == "a " ||  variable == "p " || variable == "p"){
