@@ -6,6 +6,7 @@ Open source instrument for measuring noise
  - [sinewave.html](sinewave.html)
  - [whitenoise.html](whitenoise.html)
  - [quantumnoisetriangle.html](quantumnoisetriangle.html)
+ - [quantumsnow.html](quantumsnow.html)
  - [audiospectrum.html](audiospectrum.html)
  - [webeditor.html](webeditor.html)
  - [geometron/](geometron/)
