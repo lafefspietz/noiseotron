@@ -11,4 +11,25 @@ Open source instrument for measuring noise
  - [webeditor.html](webeditor.html)
  - [geometron/](geometron/)
 
-![](images/radio-html-screenshot.png)
+![](images/schematic.png)
+
+![](images/rackmount-front-render.png)
+
+![](images/rf-block-diagram.png)
+
+## stemma-knob-wood-bracket.*
+
+![](images/stemma-knob-wood-bracket.png)
+
+ - [3dprint/stemma-knob-wood-bracket.STL](3dprint/stemma-knob-wood-bracket.STL)
+ - [3dprint/stemma-knob-wood-bracket.SLDPRT](3dprint/stemma-knob-wood-bracket.SLDPRT)
+ - [3dprint/stemma-knob-wood-bracket.SLDDRW](3dprint/stemma-knob-wood-bracket.SLDDRW)
+ - [3dprint/stemma-knob-wood-bracket.pdf](3dprint/stemma-knob-wood-bracket.pdf)
+
+![](images/wood-angle-bracket.png)
+
+![](images/woodfeather.png)
+
+![](images/quantumsnow.png)
+
+![](images/quantumnoise.png)

@@ -137,8 +137,9 @@ function setup() {
         //console.log(color);
         stroke(color);
 
-        x = r*Math.cos(theta );
-        y = r*Math.sin(theta );
+        theta -= Math.PI/6;
+        x = r*Math.cos(theta);
+        y = r*Math.sin(theta);
         point(width/2 + x,height/2 + y);
         
 
