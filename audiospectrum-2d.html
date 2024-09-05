@@ -77,40 +77,13 @@ https://cloud9-sdk.readme.io/docs/language-mode
 <body>
 
 <a href = "index.html">HOME</a>
-<table id = "commandtable">
-    <tr>
-        <td style = "color:red;display:none">RED:<span id = "redspan"></span></td>
-        <td style = "color:blue;display:none">BLUE:<span id = "bluespan"></span></td>
-        <Td>COMMAND:</Td>
-        <TD><INPUT id = "commandinput"/></TD>
 
-        <td></td>
-    </tr>
-</table>
 
-<div class = "displaybox" style = "color:red" id = "redbox">
-            $f_2$ = <span id  = "f2span"></span> Hz
-</div>
-<div class = "displaybox" style = "color:blue" id = "bluebox">
-    $f_1$ = <span id  = "f1span"></span> Hz
-</div>
 
 
 <script>
     timestamp = Math.round((new Date().getTime())/1000).toString();
 
-f1 = 500;
-f2 = 1500;
-
-f1f2json = {
-    "f1":f1,
-    "f2":f2,
-    "timestamp":timestamp
-};
-
-
-document.getElementById("commandinput").value = "";
-document.getElementById("commandinput").select();
 
 var soundFile, mic, osc,fft;
 
@@ -123,15 +96,6 @@ blueknob=0;
 
 var samples = [];
 var currentSource = "mic";
-
-T = 100;//period in frames
-
-f0 = 666;
-delta = 420;
-f = f0;
-
-f1 = 500;
-f2 = 1500;
 
 
 squaresize = 700;
@@ -151,85 +115,6 @@ else{
 
 
 deltaf = 10;
-
-document.getElementById("commandinput").onchange = function(){
-
-
-    command = this.value;
-    if(command == "redpress" || command == "bluepress" || command == "start" || command == "stop"){
-        if(oscoff){
-            osc.start();
-        }
-        else{
-            osc.stop();
-        }        
-        oscoff = !oscoff;
-    }
-    if(command.includes("=")){
-        variable = command.split("=")[0];
-        number = parseFloat(command.split("=")[1]);
-        if(variable == "f2 " || variable == "f2"){
-            f2 = number;
-            f2 = Math.round(f2);
-
-            document.getElementById("f2span").innerHTML = (f2).toString();
-            savejson();
-        } 
-        if(variable == "f1" || variable == "f1 "){
-            f1 = number;
-            f1 = Math.round(f1);
-
-            document.getElementById("f1span").innerHTML = (f1).toString();
-            savejson();
-        } 
-        if(variable == "red" || variable == "red "){
-            if(number > redknob){
-                f2 = f2 + deltaf;
-            }
-            if(number < redknob){
-                f2 = f2 - deltaf;
-            }
-            f2 = Math.round(f2);
-            redknob = number;        
-            document.getElementById("redspan").innerHTML = redknob.toString();
-                document.getElementById("f2span").innerHTML = (f2).toString();
-            savejson();
-        }
-        if(variable == "blue" || variable == "blue "){
-            if(number > blueknob){
-                f1 = f1 + deltaf;
-            }
-            if(number < blueknob){
-                f1 = f1 - deltaf;
-            }
-            f1 = Math.round(f1);
-
-            blueknob = number;        
-            document.getElementById("f2span").innerHTML = f2.toString();
-            document.getElementById("f1span").innerHTML = (f1).toString();
-            savejson();
-        }
-    }
-    
-    this.value = "";
-}
-
-
-
-
-function savejson(){
-    timestamp = Math.round((new Date().getTime())/1000).toString();
-    f1f2json.f1 = f1;
-    f1f2json.f2 = f2;
-    f1f2json.timestamp = timestamp;
-   
-    var url = "filesaver.php";        
-    var httpc2 = new XMLHttpRequest();
-    httpc2.open("POST", url, true);
-    httpc2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    httpc2.send("data="+encodeURIComponent(JSON.stringify(f1f2json,null,"    "))+"&filename=f1f2json.txt");//send text to filesaver.php
-}
-
 
 
 frameIndex= 0;
@@ -307,18 +192,64 @@ function draw(){
 
   frameRate(25);
   
-  background(255);
+//  background(255);
 
   // get a buffer of 1024 samples over time.
   spectrum = fft.analyze();
   nyquistFreq = sampleRate() / 2;
   binFreq = nyquistFreq / (spectrum.length);
 
-  
   for (let i = 0; i < spectrum.length; i++) {
     //stroke(spectrum[i]);
-      strokeWeight(10);
-      point(width - spectrum[i],height - 3*i);
+    
+        n = 256;
+        H = spectrum[i]*360/n;
+        z = 255*(1 - Math.abs((H/60)%2 - 1));
+    
+        if(H < 60){
+            red = 255;
+            green = Math.round(z);
+            blue = 0;
+        }
+        if(H >= 60 && H < 120){
+            red = Math.round(z);
+            green = 255;
+            blue = 0;
+        }
+        if(H >= 120 && H < 180){
+            red = 0;
+            green = 255;
+            blue = Math.round(z);
+        }
+        if(H >= 180 && H < 240){
+            red = 0;    
+            green = Math.round(z);
+            blue = 255;
+        }
+        if(H >= 240 && H < 300){
+            red = Math.round(z);    
+            green = 0;
+            blue = 255;
+        }
+        if(H >= 300 && H < 360){
+            red = 255;    
+            green = 0;
+            blue = Math.round(z);
+        }    
+    
+  //  stroke(0);
+//    point(frameIndex,height - 5*i);
+    
+//     stroke('rgb(' + red + ',' + green + ',' + blue + ')');
+   
+        if(spectrum[i]< 4){
+            stroke("#808080");        
+        }
+        else{
+            stroke('rgba(' + red + ',' + green + ',' + blue + ',' + spectrum[i]/10 + ')');        
+        }
+      strokeWeight(3); 
+      point(frameIndex,height - 3*i);
   }
 
   p = 0;
@@ -337,9 +268,6 @@ function draw(){
   plast = p;
   
 
-
-
-
   strokeWeight(1); 
   textSize(25);
   fill("purple");
@@ -353,15 +281,8 @@ function draw(){
 
  // text("time = " + (Math.round(width/kHz)).toString() + " ms",width - 200,height-30);  
   strokeWeight(10); 
-  stroke("blue");
-  line(width,height - 3*f1/binFreq,0,height -   3*f1/binFreq);
  
-  strokeWeight(10); 
-  stroke("red");
-  line(width,height - 3*f2/binFreq,0,height -   3*f2/binFreq);
-  
   strokeWeight(1); 
-  stroke(0);
   fill(0);  
   kHz = Math.round(1000/binFreq); 
   for(var index = 1;index < height;index++){
@@ -370,7 +291,6 @@ function draw(){
           text((index/kHz).toString() + " kHz",10,height - 3*index - 5);
       }
   }
-
   
  
    frameIndex++;

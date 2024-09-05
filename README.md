@@ -1,4 +1,4 @@
-# noiseotron
+# NOISEOTRON
 
 Open source instrument for measuring noise
 
@@ -8,6 +8,7 @@ Open source instrument for measuring noise
  - [quantumnoisetriangle.html](quantumnoisetriangle.html)
  - [quantumsnow.html](quantumsnow.html)
  - [audiospectrum.html](audiospectrum.html)
+ - [audiospectrum-2d.html](audiospectrum-2d.html)
  - [webeditor.html](webeditor.html)
  - [geometron/](geometron/)
 
