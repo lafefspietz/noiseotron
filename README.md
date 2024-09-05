@@ -14,9 +14,8 @@ Open source instrument for measuring noise
 
 ![](images/schematic.png)
 
-![](images/rackmount-front-render.png)
-
-![](images/rf-block-diagram.png)
+![](images/front.png)
+![](images/back.png)
 
 # Bill of Materials
 
@@ -41,6 +40,17 @@ Open source instrument for measuring noise
  - [M2.5 Thread inserts](https://www.3djake.com/ruthex/threaded-insert-m25-70-pieces)
  - [M2.5 Screws](https://www.homedepot.com/p/Prime-Line-M2-5-0-45-x-8-mm-Metric-Zinc-Plated-Steel-Phillips-Drive-Pan-Head-Machine-Screws-25-Pack-9130839/311229788)
  - #4 wood screws()
+ - [Adafruit Feather](https://www.adafruit.com/product/5300)
+ - [Adafruit encoder knob](https://www.adafruit.com/product/4991)
+ - [woodfeather.STL (x1)]
+ - [woodpi.STL (x1)]
+ - [pluto-bracket-base.STL (x1)]
+ - [pluto-bracket-top-bar.STL (x2)]
+ - [wood-angle-bracket.STL (x2)]
+ - [stemma-knob-wood-bracket.STL(x2)]
+ - [wood-peg.STL(x6)]
+ - [string-anchor.STL(x2)]
+
 
 
 ## stemma-knob-wood-bracket.*

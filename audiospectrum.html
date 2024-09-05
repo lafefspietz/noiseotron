@@ -318,7 +318,7 @@ function draw(){
   for (let i = 0; i < spectrum.length; i++) {
     //stroke(spectrum[i]);
       strokeWeight(10);
-      point(width - spectrum[i],height - 3*i);
+      point(width - spectrum[i],height - i);
   }
 
   p = 0;
@@ -354,20 +354,20 @@ function draw(){
  // text("time = " + (Math.round(width/kHz)).toString() + " ms",width - 200,height-30);  
   strokeWeight(10); 
   stroke("blue");
-  line(width,height - 3*f1/binFreq,0,height -   3*f1/binFreq);
+  line(width,height - f1/binFreq,0,height -   f1/binFreq);
  
   strokeWeight(10); 
   stroke("red");
-  line(width,height - 3*f2/binFreq,0,height -   3*f2/binFreq);
+  line(width,height - f2/binFreq,0,height -   f2/binFreq);
   
   strokeWeight(1); 
   stroke(0);
   fill(0);  
   kHz = Math.round(1000/binFreq); 
-  for(var index = 1;index < height;index++){
+  for(var index = 1;index < 0.5*height;index++){
       if(index%(kHz) == 0){
-          line(width,height - 3*index,0,height - 3*index);
-          text((index/kHz).toString() + " kHz",10,height - 3*index - 5);
+          line(width,height - index,0,height - index);
+          text((index/kHz).toString() + " kHz",10,height - index - 5);
       }
   }
 
