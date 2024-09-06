@@ -4,6 +4,7 @@ Open source instrument for measuring noise
 
  - [radio.html](radio.html)
  - [sinewave.html](sinewave.html)
+ - [noiseband.html](noiseband.html)
  - [whitenoise.html](whitenoise.html)
  - [quantumnoisetriangle.html](quantumnoisetriangle.html)
  - [quantumsnow.html](quantumsnow.html)

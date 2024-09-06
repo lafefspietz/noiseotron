@@ -88,6 +88,8 @@ https://cloud9-sdk.readme.io/docs/language-mode
     </tr>
 </table>
 
+<div style = "color:purple;font-size:5em;position:absolute;z-index:1">$\int_{f1}^{f2} P df$ = <span id = "pspan"></span></div>
+
 <div class = "displaybox" style = "color:red" id = "redbox">
             $f_2$ = <span id  = "f2span"></span> Hz
 </div>
@@ -124,11 +126,7 @@ blueknob=0;
 var samples = [];
 var currentSource = "mic";
 
-T = 100;//period in frames
 
-f0 = 666;
-delta = 420;
-f = f0;
 
 f1 = 500;
 f2 = 1500;
@@ -156,15 +154,7 @@ document.getElementById("commandinput").onchange = function(){
 
 
     command = this.value;
-    if(command == "redpress" || command == "bluepress" || command == "start" || command == "stop"){
-        if(oscoff){
-            osc.start();
-        }
-        else{
-            osc.stop();
-        }        
-        oscoff = !oscoff;
-    }
+ 
     if(command.includes("=")){
         variable = command.split("=")[0];
         number = parseFloat(command.split("=")[1]);
@@ -214,7 +204,21 @@ document.getElementById("commandinput").onchange = function(){
     this.value = "";
 }
 
-
+var httpc666 = new XMLHttpRequest();
+httpc666.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            f1f2json = JSON.parse(this.responseText);
+            f1 = f1f2json.f1;
+            f2 = f1f2json.f2;
+            document.getElementById("f2span").innerHTML = f2.toString();
+            document.getElementById("f1span").innerHTML = (f1).toString();
+            savejson();
+            //			MathJax.Hub.Typeset();//tell Mathjax to update the math
+    //			MathJax.Hub.Typeset();//tell Mathjax to update the math
+        }
+    };
+httpc666.open("GET", "fileloader.php?filename=f1f2json.txt", true);
+httpc666.send();
 
 
 function savejson(){
@@ -241,15 +245,6 @@ inLine = false;
 
 function setup() {
     
-    T = 100;//period in frames
-
-f0 = 666;
-delta = 420;
-f = f0;
-
-f1 = 500;
-f2 = 1500;
-
 
 frameIndex= 0;
 p = 0;
@@ -258,7 +253,7 @@ gain = 1;
 inLine = false;
 
 
-    if(innerWidth > innerHeight){
+if(innerWidth > innerHeight){
     squaresize = innerHeight;
     margin = (innerWidth - squaresize)/2;
    
@@ -301,7 +296,8 @@ else{
 
 }
 
-
+P = 0;
+numpoints = 0;
 
 function draw(){
 
@@ -313,14 +309,23 @@ function draw(){
   spectrum = fft.analyze();
   nyquistFreq = sampleRate() / 2;
   binFreq = nyquistFreq / (spectrum.length);
-
-  
+  kHz = Math.round(1000/binFreq); 
+  P = 0;
+  numpoints = 0;
   for (let i = 0; i < spectrum.length; i++) {
     //stroke(spectrum[i]);
       strokeWeight(10);
-      point(width - spectrum[i],height - i);
+      if(1000*i/kHz > f1 && 1000*i/kHz < f2){
+          P += spectrum[i]*spectrum[i];
+          numpoints +=1;
+      }
+      point(width - 10*10*Math.log10(spectrum[i]*spectrum[i]),height - i);
   }
+  
+  average = 10*10*Math.log10(P/numpoints);
 
+  document.getElementById("pspan").innerHTML = P.toString();
+  
   p = 0;
   for(var index = 0;index < spectrum.length;index++){
       p += spectrum[index];
@@ -371,8 +376,9 @@ function draw(){
       }
   }
 
-  
- 
+    strokeWeight(10); 
+ stroke("purple");
+ line(width - average,height,width - average,height/2);
    frameIndex++;
    if(frameIndex > width){
        frameIndex = 0;
