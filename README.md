@@ -43,14 +43,17 @@ Open source instrument for measuring noise
  - #4 wood screws()
  - [Adafruit Feather](https://www.adafruit.com/product/5300)
  - [Adafruit encoder knob](https://www.adafruit.com/product/4991)
- - [woodfeather.STL (x1)]
- - [woodpi.STL (x1)]
- - [pluto-bracket-base.STL (x1)]
- - [pluto-bracket-top-bar.STL (x2)]
- - [wood-angle-bracket.STL (x2)]
- - [stemma-knob-wood-bracket.STL(x2)]
- - [wood-peg.STL(x6)]
- - [string-anchor.STL(x2)]
+
+## 3d printed parts
+
+ - [woodpi.STL (x1)]()
+ - [woodfeather.STL (x1)]()
+ - [stemma-knob-wood-bracket.STL(x2)]()
+ - [pluto-bracket-base.STL (x1)]()
+ - [pluto-bracket-top-bar.STL (x2)]()
+ - [wood-angle-bracket.STL (x2)]()
+ - [wood-peg.STL(x6)]()
+ - [string-anchor.STL(x2)]()
 
 
 
